@@ -199,6 +199,23 @@ button {
   letter-spacing: 0.15px;
 }
 
+.waitlist-page__consent {
+  margin: 10px 0 0;
+  max-width: 420px;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-muted);
+}
+
+.waitlist-page__consent-domain {
+  color: var(--color-text);
+}
+
+.waitlist-page__consent a {
+  color: inherit;
+}
+
 .waitlist-page__error {
   margin: 0;
   font-family: system-ui, sans-serif;

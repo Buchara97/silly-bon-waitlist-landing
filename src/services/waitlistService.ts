@@ -25,5 +25,6 @@ export async function submitToWaitlist(email: string): Promise<void> {
     email: email.trim().toLowerCase(),
     createdAt: Date.now(),
     source: 'landing',
+    marketingConsent: true,
   })
 }

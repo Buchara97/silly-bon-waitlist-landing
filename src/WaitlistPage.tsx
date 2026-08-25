@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { LegalFooter } from './components/LegalFooter'
 import { SocialIcons } from './components/SocialIcons'
 import { socialLinks, waitlistAssets } from './data/assets'
@@ -86,33 +87,40 @@ export function WaitlistPage() {
               You&apos;re on the list! We&apos;ll be in touch soon.
             </p>
           ) : (
-            <form className="waitlist-page__form" onSubmit={handleSubmit} noValidate>
-              <input
-                className="waitlist-page__input"
-                type="email"
-                name="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                  if (formState === 'error') {
-                    setFormState('idle')
-                    setErrorMessage(null)
-                  }
-                }}
-                placeholder="you@example.com"
-                autoComplete="email"
-                aria-label="Email address"
-                disabled={formState === 'submitting'}
-                required
-              />
-              <button
-                className="waitlist-page__submit"
-                type="submit"
-                disabled={formState === 'submitting' || !formConfigured}
-              >
-                {formState === 'submitting' ? 'Submitting…' : 'Submit'}
-              </button>
-            </form>
+            <>
+              <form className="waitlist-page__form" onSubmit={handleSubmit} noValidate>
+                <input
+                  className="waitlist-page__input"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                    if (formState === 'error') {
+                      setFormState('idle')
+                      setErrorMessage(null)
+                    }
+                  }}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  aria-label="Email address"
+                  disabled={formState === 'submitting'}
+                  required
+                />
+                <button
+                  className="waitlist-page__submit"
+                  type="submit"
+                  disabled={formState === 'submitting' || !formConfigured}
+                >
+                  {formState === 'submitting' ? 'Submitting…' : 'Submit'}
+                </button>
+              </form>
+              <p className="waitlist-page__consent">
+                By submitting, you agree we may email you about Silly Bon updates from{' '}
+                <span className="waitlist-page__consent-domain">sillybon.com</span>. See our{' '}
+                <Link to="/privacy">Privacy Policy</Link>.
+              </p>
+            </>
           )}
 
           {errorMessage ? (
