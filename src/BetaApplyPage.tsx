@@ -95,11 +95,7 @@ export function BetaApplyPage() {
       .finally(() => setStatusLoading(false))
   }, [configured])
 
-  const betaClosed =
-    !configured ||
-    !betaStatus ||
-    !betaStatus.open ||
-    betaStatus.spotsLeft <= 0
+  const betaClosed = !configured || !betaStatus || !betaStatus.open
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -148,8 +144,6 @@ export function BetaApplyPage() {
       setFormState('success')
       setForm({ ...EMPTY_FORM })
       setAcceptedTerms(false)
-      const updated = await getBetaStatus()
-      setBetaStatus(updated)
     } catch (err) {
       setFormState('error')
       setErrorMessage(err instanceof Error ? err.message : 'Something went wrong. Try again.')
@@ -175,16 +169,14 @@ export function BetaApplyPage() {
       <h1 className="beta-page__title">Apply as a couple</h1>
 
       <p className="beta-page__subtitle">
-        We&apos;re looking for up to 50 pairs to test Silly Bon App before launch. Both of you need a
-        name and an email — we&apos;ll reach out if you&apos;re selected.
+        Apply as a couple to join the closed test of Silly Bon App. Both of you need a name and an
+        email — we review every application and reach out if you&apos;re selected.
       </p>
 
       {statusLoading ? (
         <p className="beta-page__status">Checking availability…</p>
-      ) : betaStatus && betaStatus.open && betaStatus.spotsLeft > 0 ? (
-        <p className="beta-page__status">
-          {betaStatus.spotsLeft} pair spot{betaStatus.spotsLeft === 1 ? '' : 's'} left
-        </p>
+      ) : betaStatus?.open ? (
+        <p className="beta-page__status">Applications are open — we choose testers manually</p>
       ) : (
         <p className="beta-page__status beta-page__status--closed">Beta signup is closed</p>
       )}

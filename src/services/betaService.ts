@@ -1,9 +1,4 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  runTransaction,
-} from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore'
 import { getFirebaseDb, isFirebaseConfigured } from '../lib/firebase'
 import { isValidEmail } from './waitlistService'
 
@@ -20,9 +15,6 @@ export type BetaApplication = {
 
 export type BetaStatus = {
   open: boolean
-  maxPairs: number
-  enrolledPairs: number
-  spotsLeft: number
 }
 
 const DEVICE_TYPES: DeviceType[] = ['android', 'ios']
@@ -47,13 +39,7 @@ export async function getBetaStatus(): Promise<BetaStatus | null> {
     return null
   }
 
-  const data = snap.data()
-  const open = data.open === true
-  const maxPairs = typeof data.maxPairs === 'number' ? data.maxPairs : 50
-  const enrolledPairs = typeof data.enrolledPairs === 'number' ? data.enrolledPairs : 0
-  const spotsLeft = Math.max(0, maxPairs - enrolledPairs)
-
-  return { open, maxPairs, enrolledPairs, spotsLeft }
+  return { open: snap.data().open === true }
 }
 
 export async function submitBetaApplication(application: BetaApplication): Promise<void> {
@@ -83,42 +69,20 @@ export async function submitBetaApplication(application: BetaApplication): Promi
   }
 
   const db = getFirebaseDb()
-  const configRef = doc(db, 'config', 'beta')
+  const configSnap = await getDoc(doc(db, 'config', 'beta'))
 
-  await runTransaction(db, async (transaction) => {
-    const configSnap = await transaction.get(configRef)
+  if (!configSnap.exists() || configSnap.data().open !== true) {
+    throw new Error('Beta signup is closed.')
+  }
 
-    if (!configSnap.exists()) {
-      throw new Error('Beta signup is not open yet.')
-    }
-
-    const data = configSnap.data()
-    const open = data.open === true
-    const maxPairs = typeof data.maxPairs === 'number' ? data.maxPairs : 50
-    const enrolledPairs = typeof data.enrolledPairs === 'number' ? data.enrolledPairs : 0
-
-    if (!open) {
-      throw new Error('Beta signup is closed.')
-    }
-
-    if (enrolledPairs >= maxPairs) {
-      throw new Error('Beta is full. Thanks for your interest!')
-    }
-
-    const applicationRef = doc(collection(db, 'betaApplications'))
-    transaction.set(applicationRef, {
-      person1Name,
-      person1Email,
-      person1Device: application.person1Device,
-      person2Name,
-      person2Email,
-      person2Device: application.person2Device,
-      createdAt: Date.now(),
-      status: 'pending',
-    })
-
-    transaction.update(configRef, {
-      enrolledPairs: enrolledPairs + 1,
-    })
+  await addDoc(collection(db, 'betaApplications'), {
+    person1Name,
+    person1Email,
+    person1Device: application.person1Device,
+    person2Name,
+    person2Email,
+    person2Device: application.person2Device,
+    createdAt: Date.now(),
+    status: 'pending',
   })
 }
