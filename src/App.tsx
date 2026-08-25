@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { BetaApplyPage } from './BetaApplyPage'
+import { PrivacyPage } from './PrivacyPage'
+import { TermsPage } from './TermsPage'
 import { WaitlistPage } from './WaitlistPage'
 
 export default function App() {
@@ -8,6 +10,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<WaitlistPage />} />
         <Route path="/beta" element={<BetaApplyPage />} />
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
       </Routes>
     </BrowserRouter>
   )

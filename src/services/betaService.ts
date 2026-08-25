@@ -7,11 +7,13 @@ import {
 import { getFirebaseDb, isFirebaseConfigured } from '../lib/firebase'
 import { isValidEmail } from './waitlistService'
 
-export type DeviceType = 'android' | 'iphone' | 'both'
+export type DeviceType = 'android' | 'ios'
 
 export type BetaApplication = {
+  person1Name: string
   person1Email: string
   person1Device: DeviceType
+  person2Name: string
   person2Email: string
   person2Device: DeviceType
 }
@@ -23,7 +25,7 @@ export type BetaStatus = {
   spotsLeft: number
 }
 
-const DEVICE_TYPES: DeviceType[] = ['android', 'iphone', 'both']
+const DEVICE_TYPES: DeviceType[] = ['android', 'ios']
 
 export function isDeviceType(value: string): value is DeviceType {
   return DEVICE_TYPES.includes(value as DeviceType)
@@ -59,8 +61,14 @@ export async function submitBetaApplication(application: BetaApplication): Promi
     throw new Error('Beta signup is not configured yet.')
   }
 
+  const person1Name = application.person1Name.trim()
+  const person2Name = application.person2Name.trim()
   const person1Email = application.person1Email.trim().toLowerCase()
   const person2Email = application.person2Email.trim().toLowerCase()
+
+  if (person1Name.length < 1 || person2Name.length < 1) {
+    throw new Error('Please enter both names.')
+  }
 
   if (!isValidEmail(person1Email) || !isValidEmail(person2Email)) {
     throw new Error('Please enter valid email addresses.')
@@ -99,8 +107,10 @@ export async function submitBetaApplication(application: BetaApplication): Promi
 
     const applicationRef = doc(collection(db, 'betaApplications'))
     transaction.set(applicationRef, {
+      person1Name,
       person1Email,
       person1Device: application.person1Device,
+      person2Name,
       person2Email,
       person2Device: application.person2Device,
       createdAt: Date.now(),

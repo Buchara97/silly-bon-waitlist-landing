@@ -1,4 +1,5 @@
 import { type FormEvent, useState } from 'react'
+import { LegalFooter } from './components/LegalFooter'
 import { SocialIcons } from './components/SocialIcons'
 import { socialLinks, waitlistAssets } from './data/assets'
 import {
@@ -138,6 +139,8 @@ export function WaitlistPage() {
         tiktokUrl={socialLinks.tiktok}
         youtubeUrl={socialLinks.youtube}
       />
+
+      <LegalFooter />
     </div>
   )
 }

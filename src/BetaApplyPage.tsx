@@ -1,4 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { LegalFooter } from './components/LegalFooter'
 import { waitlistAssets } from './data/assets'
 import {
   type BetaApplication,
@@ -13,10 +15,20 @@ import { isValidEmail } from './services/waitlistService'
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
 const EMPTY_FORM: BetaApplication = {
+  person1Name: '',
   person1Email: '',
-  person1Device: 'iphone',
+  person1Device: 'ios',
+  person2Name: '',
   person2Email: '',
-  person2Device: 'iphone',
+  person2Device: 'ios',
+}
+
+function RequiredMark() {
+  return (
+    <span className="required-mark" aria-hidden="true">
+      *
+    </span>
+  )
 }
 
 function DeviceField({
@@ -34,13 +46,14 @@ function DeviceField({
 }) {
   const options: { value: DeviceType; label: string }[] = [
     { value: 'android', label: 'Android' },
-    { value: 'iphone', label: 'iPhone' },
-    { value: 'both', label: 'Both' },
+    { value: 'ios', label: 'iOS' },
   ]
 
   return (
     <fieldset className="beta-page__device-group" disabled={disabled}>
-      <legend className="beta-page__label">{label}</legend>
+      <legend className="beta-page__label">
+        {label} <RequiredMark />
+      </legend>
       <div className="beta-page__device-options">
         {options.map((option) => (
           <label key={option.value} className="beta-page__device-option" htmlFor={`${id}-${option.value}`}>
@@ -51,6 +64,7 @@ function DeviceField({
               value={option.value}
               checked={value === option.value}
               onChange={() => onChange(option.value)}
+              required
             />
             {option.label}
           </label>
@@ -62,6 +76,7 @@ function DeviceField({
 
 export function BetaApplyPage() {
   const [form, setForm] = useState<BetaApplication>(EMPTY_FORM)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [formState, setFormState] = useState<FormState>('idle')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [betaStatus, setBetaStatus] = useState<BetaStatus | null>(null)
@@ -102,6 +117,12 @@ export function BetaApplyPage() {
       return
     }
 
+    if (!form.person1Name.trim() || !form.person2Name.trim()) {
+      setFormState('error')
+      setErrorMessage('Please enter both names.')
+      return
+    }
+
     if (!isValidEmail(form.person1Email) || !isValidEmail(form.person2Email)) {
       setFormState('error')
       setErrorMessage('Please enter valid email addresses.')
@@ -114,12 +135,19 @@ export function BetaApplyPage() {
       return
     }
 
+    if (!acceptedTerms) {
+      setFormState('error')
+      setErrorMessage('Please agree to the Terms of Service and Privacy Policy.')
+      return
+    }
+
     setFormState('submitting')
 
     try {
       await submitBetaApplication(form)
       setFormState('success')
       setForm({ ...EMPTY_FORM })
+      setAcceptedTerms(false)
       const updated = await getBetaStatus()
       setBetaStatus(updated)
     } catch (err) {
@@ -147,8 +175,8 @@ export function BetaApplyPage() {
       <h1 className="beta-page__title">Apply as a couple</h1>
 
       <p className="beta-page__subtitle">
-        We&apos;re looking for up to 50 pairs to test Silly Bon before launch. Both of you need an
-        email — we&apos;ll reach out if you&apos;re selected.
+        We&apos;re looking for up to 50 pairs to test Silly Bon App before launch. Both of you need a
+        name and an email — we&apos;ll reach out if you&apos;re selected.
       </p>
 
       {statusLoading ? (
@@ -168,7 +196,25 @@ export function BetaApplyPage() {
       ) : (
         <form className="beta-page__form" onSubmit={handleSubmit} noValidate>
           <label className="beta-page__field">
-            <span className="beta-page__label">Your email</span>
+            <span className="beta-page__label">
+              Your name <RequiredMark />
+            </span>
+            <input
+              className="beta-page__input"
+              type="text"
+              value={form.person1Name}
+              onChange={(e) => setForm((prev) => ({ ...prev, person1Name: e.target.value }))}
+              placeholder="Alex"
+              autoComplete="name"
+              disabled={formState === 'submitting' || betaClosed}
+              required
+            />
+          </label>
+
+          <label className="beta-page__field">
+            <span className="beta-page__label">
+              Your email <RequiredMark />
+            </span>
             <input
               className="beta-page__input"
               type="email"
@@ -190,7 +236,25 @@ export function BetaApplyPage() {
           />
 
           <label className="beta-page__field">
-            <span className="beta-page__label">Partner email</span>
+            <span className="beta-page__label">
+              Partner name <RequiredMark />
+            </span>
+            <input
+              className="beta-page__input"
+              type="text"
+              value={form.person2Name}
+              onChange={(e) => setForm((prev) => ({ ...prev, person2Name: e.target.value }))}
+              placeholder="Sam"
+              autoComplete="name"
+              disabled={formState === 'submitting' || betaClosed}
+              required
+            />
+          </label>
+
+          <label className="beta-page__field">
+            <span className="beta-page__label">
+              Partner email <RequiredMark />
+            </span>
             <input
               className="beta-page__input"
               type="email"
@@ -211,6 +275,20 @@ export function BetaApplyPage() {
             disabled={formState === 'submitting' || betaClosed}
           />
 
+          <label className="beta-page__consent">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              disabled={formState === 'submitting' || betaClosed}
+              required
+            />
+            <span>
+              I agree to the <Link to="/terms">Terms of Service</Link> and{' '}
+              <Link to="/privacy">Privacy Policy</Link> <RequiredMark />
+            </span>
+          </label>
+
           {errorMessage ? (
             <p className="beta-page__error" role="alert">
               {errorMessage}
@@ -226,6 +304,8 @@ export function BetaApplyPage() {
           </button>
         </form>
       )}
+
+      <LegalFooter />
     </div>
   )
 }

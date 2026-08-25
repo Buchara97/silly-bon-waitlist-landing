@@ -243,6 +243,94 @@ button {
   pointer-events: none;
 }
 
+.legal-footer {
+  margin-top: 28px;
+  padding-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: var(--color-muted);
+}
+
+.legal-footer a {
+  color: var(--color-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-footer a:hover {
+  color: var(--color-text);
+}
+
+.required-mark {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.legal-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 40px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.legal-page__header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.legal-page__brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(24px, 4vw, 32px);
+}
+
+.legal-page__icon {
+  width: 51px;
+  height: 51px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.legal-page__title {
+  margin: 28px 0 0;
+  font-size: clamp(28px, 5vw, 42px);
+  font-weight: 400;
+  text-align: center;
+}
+
+.legal-page__body {
+  margin-top: 20px;
+  width: 100%;
+  text-align: left;
+  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--color-text);
+}
+
+.legal-page__body h2 {
+  margin: 24px 0 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.legal-page__body p {
+  margin: 0 0 12px;
+}
+
 /* --- Beta apply page --- */
 
 .beta-page {
@@ -408,6 +496,24 @@ button {
 .beta-page__submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.beta-page__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.beta-page__consent input {
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.beta-page__consent a {
+  color: inherit;
 }
 
 .beta-page__error {
