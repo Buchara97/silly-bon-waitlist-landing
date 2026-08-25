@@ -5,7 +5,7 @@ Public waitlist and closed beta signup for **Silly Bon**, deployed to GitHub Pag
 | Page | URL | Purpose |
 |------|-----|---------|
 | Waitlist | `/` | Single email signup |
-| Closed beta | `/beta` | Couple application (2 emails + devices), max 50 pairs |
+| Closed beta | `/beta` | Couple applications for closed testing (unlimited; you select manually) |
 
 Data is stored in **Firebase Firestore** (same project as the Silly Bon app).
 
@@ -39,28 +39,30 @@ In Firebase Console → Firestore, create collection `config`, document id `beta
 
 ```json
 {
-  "open": true,
-  "maxPairs": 50,
-  "enrolledPairs": 0
+  "open": true
 }
 ```
 
-Set `open: false` to close beta signup without redeploying the site.
+Set `open: false` to close beta signup without redeploying the site. Applications are unlimited; you pick testers manually in Firebase Console (`status: pending` → `approved`).
+
+`maxPairs` / `enrolledPairs` are no longer used — you can delete those fields from the document if they exist.
 
 ## Collections
 
 ### `waitlist`
 ```ts
-{ email: string, createdAt: number, source: 'landing' }
+{ email: string, createdAt: number, source: 'landing', marketingConsent: true }
 ```
 
 ### `betaApplications`
 ```ts
 {
+  person1Name: string
   person1Email: string
-  person1Device: 'android' | 'iphone' | 'both'
+  person1Device: 'android' | 'ios'
+  person2Name: string
   person2Email: string
-  person2Device: 'android' | 'iphone' | 'both'
+  person2Device: 'android' | 'ios'
   createdAt: number
   status: 'pending'
 }

@@ -8,6 +8,7 @@ import {
   isWaitlistConfigured,
   submitToWaitlist,
 } from './services/waitlistService'
+import { trackEvent } from './utils/analytics'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -38,6 +39,7 @@ export function WaitlistPage() {
 
     try {
       await submitToWaitlist(email)
+      trackEvent('waitlist_submit', { method: 'email' })
       setFormState('success')
       setEmail('')
     } catch (err) {
@@ -87,40 +89,33 @@ export function WaitlistPage() {
               You&apos;re on the list! We&apos;ll be in touch soon.
             </p>
           ) : (
-            <>
-              <form className="waitlist-page__form" onSubmit={handleSubmit} noValidate>
-                <input
-                  className="waitlist-page__input"
-                  type="email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value)
-                    if (formState === 'error') {
-                      setFormState('idle')
-                      setErrorMessage(null)
-                    }
-                  }}
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  aria-label="Email address"
-                  disabled={formState === 'submitting'}
-                  required
-                />
-                <button
-                  className="waitlist-page__submit"
-                  type="submit"
-                  disabled={formState === 'submitting' || !formConfigured}
-                >
-                  {formState === 'submitting' ? 'Submitting…' : 'Submit'}
-                </button>
-              </form>
-              <p className="waitlist-page__consent">
-                By submitting, you agree we may email you about Silly Bon updates from{' '}
-                <span className="waitlist-page__consent-domain">sillybon.com</span>. See our{' '}
-                <Link to="/privacy">Privacy Policy</Link>.
-              </p>
-            </>
+            <form className="waitlist-page__form" onSubmit={handleSubmit} noValidate>
+              <input
+                className="waitlist-page__input"
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                  if (formState === 'error') {
+                    setFormState('idle')
+                    setErrorMessage(null)
+                  }
+                }}
+                placeholder="you@example.com"
+                autoComplete="email"
+                aria-label="Email address"
+                disabled={formState === 'submitting'}
+                required
+              />
+              <button
+                className="waitlist-page__submit"
+                type="submit"
+                disabled={formState === 'submitting' || !formConfigured}
+              >
+                {formState === 'submitting' ? 'Submitting…' : 'Submit'}
+              </button>
+            </form>
           )}
 
           {errorMessage ? (
@@ -130,6 +125,14 @@ export function WaitlistPage() {
           ) : null}
 
           <p className="waitlist-page__social-proof">Join 200+ people already waiting</p>
+
+          {formState !== 'success' ? (
+            <p className="waitlist-page__consent">
+              By submitting, you agree we may email you about Silly Bon updates from{' '}
+              <span className="waitlist-page__consent-domain">sillybon.com</span>. See our{' '}
+              <Link to="/privacy">Privacy Policy</Link>.
+            </p>
+          ) : null}
         </div>
 
         <img

@@ -11,6 +11,7 @@ import {
   submitBetaApplication,
 } from './services/betaService'
 import { isValidEmail } from './services/waitlistService'
+import { trackEvent } from './utils/analytics'
 
 type FormState = 'idle' | 'submitting' | 'success' | 'error'
 
@@ -141,6 +142,10 @@ export function BetaApplyPage() {
 
     try {
       await submitBetaApplication(form)
+      trackEvent('beta_submit', {
+        person1_device: form.person1Device,
+        person2_device: form.person2Device,
+      })
       setFormState('success')
       setForm({ ...EMPTY_FORM })
       setAcceptedTerms(false)
