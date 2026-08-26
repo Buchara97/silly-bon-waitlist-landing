@@ -1,11 +1,11 @@
 # Silly Bon — Waitlist Landing
 
-Public waitlist and closed beta signup for **Silly Bon**, deployed to GitHub Pages at [sillybon.com](https://sillybon.com).
+Public closed-beta signup for **Silly Bon**, deployed to GitHub Pages at [sillybon.com](https://sillybon.com).
 
 | Page | URL | Purpose |
 |------|-----|---------|
-| Waitlist | `/` | Single email signup |
-| Closed beta | `/beta` | Couple applications for closed testing (unlimited; you select manually) |
+| Home | `/` | Closed beta signup (couple or solo) |
+| Terms / Privacy | `/terms`, `/privacy` | Legal placeholders |
 
 Data is stored in **Firebase Firestore** (same project as the Silly Bon app).
 
@@ -26,7 +26,7 @@ Copy the same `VITE_FIREBASE_*` values used in the main `silly-bon` app into `.e
 
 ### 2. Firestore rules
 
-Deploy rules from the main app repo (includes `waitlist`, `betaApplications`, `config/beta`):
+Deploy rules from the main app repo (includes `waitlist`, `betaSignups`, `config/beta`):
 
 ```bash
 cd ../silly-bon
@@ -43,32 +43,42 @@ In Firebase Console → Firestore, create collection `config`, document id `beta
 }
 ```
 
-Set `open: false` to close beta signup without redeploying the site. Applications are unlimited; you pick testers manually in Firebase Console (`status: pending` → `approved`).
-
-`maxPairs` / `enrolledPairs` are no longer used — you can delete those fields from the document if they exist.
+Set `open: false` to close beta signup without redeploying the site. You pick testers manually in Firebase Console (`status: pending` → `approved`).
 
 ## Collections
 
-### `waitlist`
-```ts
-{ email: string, createdAt: number, source: 'landing', marketingConsent: true }
-```
+### `betaSignups`
 
-### `betaApplications`
+**Solo**
 ```ts
 {
-  person1Name: string
+  mode: 'solo'
   person1Email: string
   person1Device: 'android' | 'ios'
-  person2Name: string
+  createdAt: number
+  status: 'pending'
+  source: 'landing'
+}
+```
+
+**Couple**
+```ts
+{
+  mode: 'couple'
+  person1Email: string
+  person1Device: 'android' | 'ios'
   person2Email: string
   person2Device: 'android' | 'ios'
   createdAt: number
   status: 'pending'
+  source: 'landing'
 }
 ```
 
-Review applications in Firebase Console. Change `status` to `approved` manually when ready.
+### `waitlist` (legacy)
+```ts
+{ email: string, createdAt: number, source: 'landing', marketingConsent: true }
+```
 
 ## Assets
 
@@ -77,8 +87,8 @@ Images in `public/assets/`:
 | File | Role |
 |------|------|
 | `app_icon.png` | Header icon |
-| `bon_boy.gif` | Left mascot (desktop waitlist) |
-| `bon_girl.gif` | Right mascot (desktop waitlist) |
+| `bon_boy.gif` | Left mascot (desktop) |
+| `bon_girl.gif` | Right mascot (desktop) |
 
 ## Deploy to GitHub Pages
 
@@ -89,7 +99,7 @@ Images in `public/assets/`:
 
 ### Custom domain (sillybon.com)
 
-`public/CNAME` contains `sillybon.com`. In GitHub **Settings → Pages → Custom domain**, enter `sillybon.com` and configure DNS A/CNAME records (see Firebase/hosting docs). `vite.config.ts` uses `base: '/'`.
+`public/CNAME` contains `sillybon.com`. In GitHub **Settings → Pages → Custom domain**, enter `sillybon.com` and configure DNS A/CNAME records. `vite.config.ts` uses `base: '/'`.
 
 ## Build
 
@@ -98,4 +108,4 @@ npm run build
 npm run preview
 ```
 
-`npm run build` copies `dist/index.html` to `dist/404.html` so direct links to `/beta` work on GitHub Pages.
+`npm run build` copies `dist/index.html` to `dist/404.html` so SPA routes work on GitHub Pages.
