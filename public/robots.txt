@@ -1,0 +1,39 @@
+# Allow major search + AI crawlers to learn about Silly Bon
+User-agent: *
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Machine-readable product summary for LLMs
+# https://sillybon.com/llms.txt
+# https://sillybon.com/llms-full.txt
+
+Sitemap: https://sillybon.com/sitemap.xml
