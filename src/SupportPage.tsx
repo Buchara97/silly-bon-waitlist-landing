@@ -23,7 +23,7 @@ export function SupportPage() {
       <SeoHead
         title="Support — Silly Bon"
         description="Need help with Silly Bon? Email support@sillybon.com. We typically respond within 24 hours on business days."
-        path="/support"
+        path="/support/"
       />
       <SiteHeader />
 

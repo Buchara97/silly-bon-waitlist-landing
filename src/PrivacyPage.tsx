@@ -9,7 +9,7 @@ export function PrivacyPage() {
       <SeoHead
         title="Privacy Policy — Silly Bon"
         description="Learn how Silly Bon collects and uses information on sillybon.com and in the Silly Bon app."
-        path="/privacy"
+        path="/privacy/"
       />
       <LegalPage title="Privacy Policy">
         <p>Last updated: October 4, 2026</p>

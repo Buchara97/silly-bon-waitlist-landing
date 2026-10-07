@@ -9,7 +9,7 @@ export function TermsPage() {
       <SeoHead
         title="Terms of Service — Silly Bon"
         description="Read the Terms of Service for sillybon.com and the Silly Bon couples app."
-        path="/terms"
+        path="/terms/"
       />
       <LegalPage title="Terms of Service">
       <p>Last updated: October 4, 2026</p>

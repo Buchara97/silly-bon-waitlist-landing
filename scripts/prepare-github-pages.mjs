@@ -40,7 +40,7 @@ function escapeHtml(value) {
 }
 
 function patchShell(source, { path, title, description }) {
-  const url = `https://sillybon.com/${path}`
+  const url = `https://sillybon.com/${path}/`
   const safeTitle = escapeHtml(title)
   const safeDescription = escapeHtml(description)
 

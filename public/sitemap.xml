@@ -7,19 +7,19 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://sillybon.com/support</loc>
+    <loc>https://sillybon.com/support/</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://sillybon.com/terms</loc>
+    <loc>https://sillybon.com/terms/</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://sillybon.com/privacy</loc>
+    <loc>https://sillybon.com/privacy/</loc>
     <lastmod>2026-10-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
