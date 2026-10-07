@@ -11,9 +11,13 @@ export default function App() {
       <AnalyticsListener />
       <Routes>
         <Route path="/" element={<HomePage />} />
+        {/* Trailing-slash variants: GitHub Pages directory indexes redirect to /path/ */}
         <Route path="/support" element={<SupportPage />} />
+        <Route path="/support/" element={<SupportPage />} />
         <Route path="/terms" element={<TermsPage />} />
+        <Route path="/terms/" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/privacy/" element={<PrivacyPage />} />
       </Routes>
     </BrowserRouter>
   )
