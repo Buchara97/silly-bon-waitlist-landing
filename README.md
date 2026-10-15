@@ -60,4 +60,4 @@ After deploy, submit `https://sillybon.com/sitemap.xml` in Google Search Console
 | `public/assets/app_icon.png` | Logo |
 | `public/assets/google-play-badge.webp` | Play Store badge |
 | `public/assets/Screenshots/01–05.png` | Hero carousel |
-| `public/og-banner.png` | Open Graph image |
+| `public/assets/banner.png` | Open Graph / share preview image |
