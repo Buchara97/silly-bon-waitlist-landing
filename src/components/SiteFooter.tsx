@@ -42,8 +42,8 @@ export function SiteFooter({ showDownloadCta = true }: SiteFooterProps) {
 
         <div className="site-footer__bottom">
           <nav className="site-footer__links" aria-label="Footer">
-            <Link to="/terms">Terms of Service</Link>
-            <Link to="/privacy">Privacy Policy</Link>
+            <a href="/terms/">Terms of Service</a>
+            <a href="/privacy/">Privacy Policy</a>
             <Link to="/support">Support</Link>
           </nav>
           <SocialIcons

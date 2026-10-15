@@ -1,9 +1,9 @@
 /**
  * GitHub Pages serves unknown paths as 404.html with HTTP 404.
- * Google will not index those URLs. Copy the SPA shell into real
- * directories so /privacy, /terms, /support return HTTP 200.
+ * - Keep static legal pages from public/privacy and public/terms as-is.
+ * - Copy the SPA shell into /support/ so that route returns HTTP 200.
  */
-import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 const dist = 'dist'
@@ -11,25 +11,22 @@ const indexPath = join(dist, 'index.html')
 const html = readFileSync(indexPath, 'utf8')
 
 copyFileSync(indexPath, join(dist, '404.html'))
+console.log('Wrote 404.html')
 
-const routes = [
-  {
-    path: 'privacy',
-    title: 'Privacy Policy — Silly Bon',
-    description: 'Learn how Silly Bon collects and uses information on sillybon.com and in the Silly Bon app.',
-  },
-  {
-    path: 'terms',
-    title: 'Terms of Service — Silly Bon',
-    description: 'Read the Terms of Service for sillybon.com and the Silly Bon couples app.',
-  },
-  {
-    path: 'support',
-    title: 'Support — Silly Bon',
-    description:
-      'Need help with Silly Bon? Email support@sillybon.com. We typically respond within 24 hours on business days.',
-  },
-]
+for (const path of ['privacy', 'terms']) {
+  const legalIndex = join(dist, path, 'index.html')
+  if (!existsSync(legalIndex)) {
+    throw new Error(`Missing static legal page at ${legalIndex}. Expected public/${path}/index.html.`)
+  }
+  console.log(`Kept static ${path}/index.html`)
+}
+
+const support = {
+  path: 'support',
+  title: 'Support — Silly Bon',
+  description:
+    'Need help with Silly Bon? Email support@sillybon.com. We typically respond within 24 hours on business days.',
+}
 
 function escapeHtml(value) {
   return value
@@ -85,11 +82,7 @@ function patchShell(source, { path, title, description }) {
   return out
 }
 
-for (const route of routes) {
-  const dir = join(dist, route.path)
-  mkdirSync(dir, { recursive: true })
-  writeFileSync(join(dir, 'index.html'), patchShell(html, route), 'utf8')
-  console.log(`Wrote ${route.path}/index.html`)
-}
-
-console.log('Wrote 404.html')
+const supportDir = join(dist, support.path)
+mkdirSync(supportDir, { recursive: true })
+writeFileSync(join(supportDir, 'index.html'), patchShell(html, support), 'utf8')
+console.log('Wrote support/index.html')
