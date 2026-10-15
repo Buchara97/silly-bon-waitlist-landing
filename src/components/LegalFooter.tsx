@@ -7,6 +7,8 @@ export function LegalFooter() {
       <span aria-hidden="true">·</span>
       <a href="/privacy/">Privacy Policy</a>
       <span aria-hidden="true">·</span>
+      <a href="/delete-account/">Delete account</a>
+      <span aria-hidden="true">·</span>
       <Link to="/support">Support</Link>
     </nav>
   )

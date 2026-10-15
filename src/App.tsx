@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AnalyticsListener } from './components/AnalyticsListener'
+import { DeleteAccountPage } from './DeleteAccountPage'
 import { HomePage } from './HomePage'
 import { PrivacyPage } from './PrivacyPage'
 import { SupportPage } from './SupportPage'
@@ -18,6 +19,8 @@ export default function App() {
         <Route path="/terms/" element={<TermsPage />} />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/privacy/" element={<PrivacyPage />} />
+        <Route path="/delete-account" element={<DeleteAccountPage />} />
+        <Route path="/delete-account/" element={<DeleteAccountPage />} />
       </Routes>
     </BrowserRouter>
   )

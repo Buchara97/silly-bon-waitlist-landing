@@ -44,6 +44,7 @@ export function SiteFooter({ showDownloadCta = true }: SiteFooterProps) {
           <nav className="site-footer__links" aria-label="Footer">
             <a href="/terms/">Terms of Service</a>
             <a href="/privacy/">Privacy Policy</a>
+            <a href="/delete-account/">Delete account</a>
             <Link to="/support">Support</Link>
           </nav>
           <SocialIcons

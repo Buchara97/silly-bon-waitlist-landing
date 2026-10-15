@@ -1,6 +1,6 @@
 /**
  * GitHub Pages serves unknown paths as 404.html with HTTP 404.
- * - Keep static legal pages from public/privacy and public/terms as-is.
+ * - Keep static legal pages from public/privacy, public/terms, public/delete-account as-is.
  * - Copy the SPA shell into /support/ so that route returns HTTP 200.
  */
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -13,7 +13,7 @@ const html = readFileSync(indexPath, 'utf8')
 copyFileSync(indexPath, join(dist, '404.html'))
 console.log('Wrote 404.html')
 
-for (const path of ['privacy', 'terms']) {
+for (const path of ['privacy', 'terms', 'delete-account']) {
   const legalIndex = join(dist, path, 'index.html')
   if (!existsSync(legalIndex)) {
     throw new Error(`Missing static legal page at ${legalIndex}. Expected public/${path}/index.html.`)
